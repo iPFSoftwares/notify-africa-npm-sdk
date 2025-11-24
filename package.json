@@ -1,5 +1,5 @@
 {
-  "name": "npm-package-starter-template",
+  "name": "notify-africa",
   "description": "A minimal, configurable TypeScript npm package starter template with build and test setup.",
   "version": "0.0.0",
   "main": "./dist/index.cjs",
@@ -14,7 +14,7 @@
     "url": ""
   },
   "license": "MIT",
-  "author": "<Your Name> <email@example.com>",
+  "author": "Tachera Sasi <tacherasasi@gmail.com> (https://tachera.ekilie.com)",
   "scripts": {
     "build": "tsup",
     "clean": "rm -rf dist",
