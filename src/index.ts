@@ -1,24 +1,139 @@
-/**
- * A minimal example library for the starter template.
- *
- * Exports:
- * - `greet(name?)` : returns a greeting string
- * - `sum(...numbers)` : returns the numeric sum
- *
- * Both named exports and a default export object are provided to showcase
- * common package export patterns.
- */
 
-/** Return a friendly greeting. */
-export function greet(name = "world"): string {
-  return `Hello, ${name}!`;
+
+export class NotifyAfricaSMS {
+  private baseUrl: string;
+  private apiToken: string;
+
+  constructor(apiToken: string, baseUrl: string = "https://api.notify.africa") {
+    this.apiToken = apiToken;
+    this.baseUrl = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl; // Normalize URL
+  }
+
+  /**
+   * Sends a single SMS message.
+   * @param phoneNumber The recipient's phone number (e.g., "255689737459").
+   * @param message The message content.
+   * @param senderId The sender ID (e.g., "137").
+   * @returns The response data with messageId and status.
+   */
+  async sendSingleMessage(
+    phoneNumber: string,
+    message: string,
+    senderId: string
+  ): Promise<SendSingleResponse> {
+    const url = `${this.baseUrl}/api/v1/api/messages/send`;
+    const body: SendSingleRequest = {
+      phone_number: phoneNumber,
+      message,
+      sender_id: senderId,
+    };
+    const headers = {
+      Authorization: `Bearer ${this.apiToken}`,
+      "Content-Type": "application/json",
+    };
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(body),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || `HTTP error! Status: ${response.status}`
+        );
+      }
+      const data = await response.json();
+      if (data.status !== 200) {
+        throw new Error(data.message || "Failed to send message");
+      }
+      return data.data;
+    } catch (error) {
+      throw new Error(
+        `Error sending single message: ${(error as Error).message}`
+      );
+    }
+  }
+
+  /**
+   * Sends a batch of SMS messages to multiple recipients.
+   * @param phoneNumbers Array of recipient phone numbers (e.g., ["255763765548", "255689737839"]).
+   * @param message The message content.
+   * @param senderId The sender ID (e.g., "137").
+   * @returns The response data with messageCount, creditsDeducted, and remainingBalance.
+   */
+  async sendBatchMessages(
+    phoneNumbers: string[],
+    message: string,
+    senderId: string
+  ): Promise<SendBatchResponse> {
+    const url = `${this.baseUrl}/api/v1/api/messages/batch`;
+    const body: SendBatchRequest = {
+      phone_numbers: phoneNumbers,
+      message,
+      sender_id: senderId,
+    };
+    const headers = {
+      Authorization: `Bearer ${this.apiToken}`,
+      "Content-Type": "application/json",
+    };
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(body),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || `HTTP error! Status: ${response.status}`
+        );
+      }
+      const data = await response.json();
+      if (data.status !== 200) {
+        throw new Error(data.message || "Failed to send batch messages");
+      }
+      return data.data;
+    } catch (error) {
+      throw new Error(
+        `Error sending batch messages: ${(error as Error).message}`
+      );
+    }
+  }
+
+  /**
+   * Checks the status of a sent message.
+   * @param messageId The ID of the message to check (e.g., "156022").
+   * @returns The response data with messageId, status, sentAt, and deliveredAt.
+   */
+  async checkMessageStatus(messageId: string): Promise<MessageStatusResponse> {
+    const url = `${this.baseUrl}/api/v1/api/messages/status/${messageId}`;
+    const headers = {
+      Authorization: `Bearer ${this.apiToken}`,
+    };
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers,
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || `HTTP error! Status: ${response.status}`
+        );
+      }
+      const data = await response.json();
+      if (data.status !== 200) {
+        throw new Error(data.message || "Failed to retrieve message status");
+      }
+      return data.data;
+    } catch (error) {
+      throw new Error(
+        `Error checking message status: ${(error as Error).message}`
+      );
+    }
+  }
 }
-
-/** Sum numbers and return their total (0 when no args). */
-export function sum(...nums: number[]): number {
-  return nums.reduce((a, b) => a + b, 0);
-}
-
-const defaultExport = { greet, sum } as const;
-
-export default defaultExport;
