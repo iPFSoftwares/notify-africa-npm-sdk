@@ -3,8 +3,6 @@
 [![npm version](https://badge.fury.io/js/notify-africa.svg)](https://badge.fury.io/js/notify-africa)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-SMS, WhatsApp, Voice, AI Chatbots, and CRM - all in one powerful platform designed for businesses across Africa.
-
 This is a TypeScript/JavaScript SDK for interacting with the Notify Africa API, focusing on SMS messaging features. It provides a simple class-based interface for sending single or batch SMS messages and checking message status. Built with native `fetch` for zero external dependencies (requires Node.js >= 18.0.0).
 
 ## Features
@@ -182,5 +180,3 @@ MIT License. See [LICENSE](LICENSE) for details.
 ## Support
 
 For API-related questions, visit the [Notify Africa Developers Portal](https://notify.africa/developers).
-
-Author: Tachera Sasi <tacherasasi@gmail.com> (https://tachera.ekilie.com)
